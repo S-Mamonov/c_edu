@@ -17,6 +17,7 @@ s21_size_t s21_strcspn(const char* str1, const char* str2);
 s21_size_t s21_strlen(const char* str);
 char* s21_strpbrk(const char* str1, const char* str2);
 char* s21_strrchr(const char* str, int c);
+char* s21_strstr(const char* haystack, const char* needle);
 
 
 int main()
@@ -25,12 +26,23 @@ int main()
         puts("its a linux, baby!");
     #endif // __linux__
 
-    char ar1[] = "123456";
-    //char ar2[20] = "Grom3ozeka";
+    char* ar1 = "Kopengagen!";
+    char* ar2 = "enf";
 
-    printf("++%s++\n", s21_strrchr(ar1, 'z'));
-    printf("--%s--\n", strrchr(ar1, 'z'));
-//printf("--%s--\n", ar1 + 1);
+//    while(*ar1){
+//        if(!s21_strncmp(ar1, ar2, 2)){
+//            printf("***%s***\n", ar1);
+//            break;
+//        }
+//        ar1++;
+//    }
+//    puts("end");
+
+    printf("++%s++\n", s21_strstr(ar1, ar2));
+    printf("--%s--\n", strstr(ar1, ar2));
+    //printf("...%s...", ar1 + 3);
+    //printf("--%s--\n", strrchr(ar1, 'z'));
+    //printf("--%s--\n", ar1 + 1);
     //strncat(ar1, ar2, 4);
 
 
@@ -53,12 +65,15 @@ void* s21_memchr(const void* str, int c, s21_size_t n){
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n){
     const char* ptr1 = str1;
     const char* ptr2 = str2;
+    int res = 0;
 
-    for (s21_size_t i = 0; i < n && *ptr1 && *ptr2 && *ptr1 == *ptr2; i++){
-        ptr1++;
-        ptr2++;
+    for (s21_size_t i = 0; i < n; i++){
+        if(ptr1[i] != ptr2[i]){
+            res = ptr1[i] - ptr2[i];
+            break;
+        }
     }
-    return *ptr1 - *ptr2;
+    return res;
 }
 
 void* s21_memcpy(void* dest, const void* src, s21_size_t n){
@@ -109,25 +124,18 @@ char* s21_strchr(const char* str, int c){
 }
 
 s21_size_t s21_strlen(const char* str){
-    const char* ptr = str;
     s21_size_t cnt = 0;
 
-    while(*ptr){
+    while(*str){
         cnt++;
-        ptr++;
+        str++;
     }
     return cnt;
 }
 
 int s21_strncmp(const char* str1, const char* str2, s21_size_t n){
-    s21_size_t cnt = 0;
 
-    while(*str1 && *str1 == *str2 && cnt < n){
-        str1++;
-        str2++;
-        cnt++;
-    }
-    return *str1 - *str2;
+    return s21_memcmp(str1, str2, n);
 }
 
 char* s21_strncpy(char* dest, const char* src, s21_size_t n){
@@ -184,4 +192,22 @@ char* s21_strrchr(const char* str, int c){
         len--;
     }
     return flag ? (char*)(str + len) : s21_NULL;
+}
+
+char* s21_strstr(const char* haystack, const char* needle){
+    char* res = s21_NULL;
+    char* ptr;
+    int flag = 1;
+
+    if (s21_strlen(needle) == 0)
+        flag = 0;
+
+    while(flag && (ptr = s21_strchr(haystack, *needle)) != s21_NULL){
+        if (s21_strncmp(ptr, needle, s21_strlen(needle)) == 0){
+            res = ptr;
+            break;
+        }
+        haystack++;
+    }
+    return flag ? res : (char*)haystack;
 }
