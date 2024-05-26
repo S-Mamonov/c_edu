@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define s21_size_t unsigned long
 #define s21_NULL (void*)0
+
+typedef unsigned long s21_size_t;
 
 void* s21_memchr(const void* str, int c, s21_size_t n);
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -18,33 +19,21 @@ s21_size_t s21_strlen(const char* str);
 char* s21_strpbrk(const char* str1, const char* str2);
 char* s21_strrchr(const char* str, int c);
 char* s21_strstr(const char* haystack, const char* needle);
+char* s21_strtok(char* str, const char* delim);
 
 
 int main()
 {
     #ifdef __linux__
-        puts("its a linux, baby!");
+        puts("it's a linux, baby!");
     #endif // __linux__
 
-    char* ar1 = "Kopengagen!";
-    char* ar2 = "enf";
 
-//    while(*ar1){
-//        if(!s21_strncmp(ar1, ar2, 2)){
-//            printf("***%s***\n", ar1);
-//            break;
-//        }
-//        ar1++;
-//    }
-//    puts("end");
+    char str []="Kope";
+    char sep []="Kop";
 
-    printf("++%s++\n", s21_strstr(ar1, ar2));
-    printf("--%s--\n", strstr(ar1, ar2));
-    //printf("...%s...", ar1 + 3);
-    //printf("--%s--\n", strrchr(ar1, 'z'));
-    //printf("--%s--\n", ar1 + 1);
-    //strncat(ar1, ar2, 4);
-
+    printf ("+++%d+++\n", s21_strncmp(str, sep, 6));
+    printf ("---%ld---\n", s21_strlen(sep));
 
     return 0;
 }
@@ -124,24 +113,22 @@ char* s21_strchr(const char* str, int c){
 }
 
 s21_size_t s21_strlen(const char* str){
-    s21_size_t cnt = 0;
+    s21_size_t cnt;
 
-    while(*str){
-        cnt++;
-        str++;
-    }
+    for (cnt = 0; str[cnt]; cnt++);
+
     return cnt;
 }
 
 int s21_strncmp(const char* str1, const char* str2, s21_size_t n){
-
+    n = (s21_strlen(str1) < s21_strlen(str2) ? s21_strlen(str1) : s21_strlen(str1)) + 1;
     return s21_memcmp(str1, str2, n);
 }
 
 char* s21_strncpy(char* dest, const char* src, s21_size_t n){
-    s21_size_t i = 0;
+    s21_size_t i;
 
-    for (; i < n && src[i] != '\0'; i++)
+    for (i = 0; i < n && src[i] != '\0'; i++)
         dest[i] = src[i];
 
     if (src[i] == '\0'){
@@ -153,9 +140,9 @@ char* s21_strncpy(char* dest, const char* src, s21_size_t n){
 
 s21_size_t s21_strcspn(const char* str1, const char* str2){
     int flag = 1;
-    s21_size_t cnt = 0;
+    s21_size_t cnt;
 
-    for (; flag && cnt < s21_strlen(str1); cnt++)
+    for (cnt = 0; flag && cnt < s21_strlen(str1); cnt++)
         for (s21_size_t j = 0; j < s21_strlen(str2); j++)
             if (str1[cnt] == str2[j]){
                 flag = 0;
@@ -211,3 +198,7 @@ char* s21_strstr(const char* haystack, const char* needle){
     }
     return flag ? res : (char*)haystack;
 }
+
+//char* s21_strtok(char* str, const char* delim){
+//
+//}
