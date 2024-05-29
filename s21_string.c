@@ -28,12 +28,24 @@ int main()
         puts("it's a linux, baby!");
     #endif // __linux__
 
+    char str[] = "";
+    char str2[] = "";
+    char* sep = "be";
 
-    char str []="Kope";
-    char sep []="Kop";
+    printf ("+++%s+++\n", strtok(str, sep));
+    printf ("---%s---\n", s21_strtok(str2, sep));
+    printf ("+++%s+++\n", strtok(NULL, sep));
+    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+    printf ("+++%s+++\n", strtok(NULL, sep));
+    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+    printf ("+++%s+++\n", strtok(NULL, sep));
+    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
 
-    printf ("+++%d+++\n", s21_strncmp(str, sep, 6));
-    printf ("---%ld---\n", s21_strlen(sep));
+    puts(str);
+    puts(str2);
+
+//    for(int i = 0; i < 150; i ++)
+//        printf("%3d - %s\n", i, strerror(i));
 
     return 0;
 }
@@ -98,18 +110,18 @@ char* s21_strncat(char* dest, const char* src, s21_size_t n){
 }
 
 char* s21_strchr(const char* str, int c){
-    s21_size_t len = s21_strlen(str);
+    char* res = s21_NULL;
     s21_size_t cnt = 0;
-    int flag = 0;
+    s21_size_t len = s21_strlen(str) + 1;
 
-    while(cnt < len + 1){
+    while(cnt < len){
         if (str[cnt] == c){
-            flag = 1;
+            res = (char*)(str + cnt);
             break;
         }
         cnt++;
     }
-    return flag ? (char*)(str + cnt) : s21_NULL;
+    return res;
 }
 
 s21_size_t s21_strlen(const char* str){
@@ -138,47 +150,39 @@ char* s21_strncpy(char* dest, const char* src, s21_size_t n){
     return dest;
 }
 
-s21_size_t s21_strcspn(const char* str1, const char* str2){
-    int flag = 1;
-    s21_size_t cnt;
+s21_size_t s21_strcspn(const char* str1, const char* str2) {
+  s21_size_t res;
 
-    for (cnt = 0; flag && cnt < s21_strlen(str1); cnt++)
-        for (s21_size_t j = 0; j < s21_strlen(str2); j++)
-            if (str1[cnt] == str2[j]){
-                flag = 0;
-                cnt--;
-                break;
-            }
+  for (res = 0; res < s21_strlen(str1); res++)
+    if (s21_strchr(str2, str1[res]))
+        break;
 
-    return cnt;
+  return res;
 }
 
 char* s21_strpbrk(const char* str1, const char* str2){
     char* res = s21_NULL;
-    int flag = 1;
 
-    for (s21_size_t i = 0; flag && i < s21_strlen(str1); i++)
-        for (s21_size_t j = 0; j < s21_strlen(str2); j++)
-            if (str1[i] == str2[j]){
-                res = (char*)(str1 + i);
-                flag = 0;
-                break;
-            }
+    for (s21_size_t i = 0; i < s21_strlen(str1); i++)
+        if(s21_strchr(str2, str1[i])){
+            res = (char*)(str1 + i);
+            break;
+        }
     return res;
 }
 
 char* s21_strrchr(const char* str, int c){
     int len = s21_strlen(str);
-    int flag = 0;
+    char* res = s21_NULL;
 
     while(len > -1){
         if (str[len] == c){
-            flag = 1;
+            res = (char*)(str + len);
             break;
         }
         len--;
     }
-    return flag ? (char*)(str + len) : s21_NULL;
+    return res;
 }
 
 char* s21_strstr(const char* haystack, const char* needle){
@@ -199,6 +203,54 @@ char* s21_strstr(const char* haystack, const char* needle){
     return flag ? res : (char*)haystack;
 }
 
+char* s21_strtok(char* str, const char* delim){
+    static char* last;
+
+    if (str)
+        last = str;
+
+    if ((last == 0) || (*last == 0))
+        return 0;
+
+    char* c = last;
+
+    while(strchr(delim, *c)) c++;
+
+    if (*c == 0) return 0;
+
+    char* start = c;
+
+    while(*c && (strchr(delim, *c) == 0)) c++;
+
+    if (*c == 0)
+    {
+        last = c;
+        return start;
+    }
+
+    *c = 0;
+    last = c+1;
+
+    return start;
+}
+
 //char* s21_strtok(char* str, const char* delim){
+//    static char* final;
+//    char ch;
 //
+//    if (str == s21_NULL)
+//        str = final;
+//
+//    do{
+//        if ((ch = *str++) == '\0')
+//            return s21_NULL;
+//    }while(s21_strchr(delim, ch));
+//    str--;
+//
+//    final = str + s21_strcspn(str, delim);
+//
+//    if (*final != 0)
+//        *final++ = '\0';
+//
+//    return str;
 //}
