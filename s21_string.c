@@ -21,6 +21,7 @@ char* s21_strrchr(const char* str, int c);
 char* s21_strstr(const char* haystack, const char* needle);
 char* s21_strtok(char* str, const char* delim);
 
+void* s21_insert(const char* src, const char* str, s21_size_t start_index);
 
 int main()
 {
@@ -28,21 +29,27 @@ int main()
         puts("it's a linux, baby!");
     #endif // __linux__
 
-    char str[] = "";
-    char str2[] = "";
-    char* sep = "be";
-
-    printf ("+++%s+++\n", strtok(str, sep));
-    printf ("---%s---\n", s21_strtok(str2, sep));
-    printf ("+++%s+++\n", strtok(NULL, sep));
-    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
-    printf ("+++%s+++\n", strtok(NULL, sep));
-    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
-    printf ("+++%s+++\n", strtok(NULL, sep));
-    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
-
-    puts(str);
-    puts(str2);
+    char str[100] = {0};
+    char* s1 = "0123";
+    char s2[] = "ad";
+    char s3[] = "third";
+    char* res = s21_insert(s1, s2, 2);
+    printf("---%s---", res);
+//    char str[] = "abc1xyz";
+//    char str2[] = "abc1xyz";
+//    char* sep = "1y";
+//
+//    printf ("+++%s+++\n", strtok(str, sep));
+//    printf ("---%s---\n", s21_strtok(str2, sep));
+//    printf ("+++%s+++\n", strtok(NULL, sep));
+//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//    printf ("+++%s+++\n", strtok(NULL, sep));
+//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//    printf ("+++%s+++\n", strtok(NULL, sep));
+//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//
+//    puts(str);
+//    puts(str2);
 
 //    for(int i = 0; i < 150; i ++)
 //        printf("%3d - %s\n", i, strerror(i));
@@ -254,3 +261,20 @@ char* s21_strtok(char* str, const char* delim){
 //
 //    return str;
 //}
+
+void* s21_insert(const char* src, const char* str, s21_size_t start_index){
+    if (src == s21_NULL || str == s21_NULL) return s21_NULL;
+    s21_size_t len_src = s21_strlen(src);
+    s21_size_t len_str = s21_strlen(str);
+    start_index = start_index < len_src ? start_index : len_src;
+
+    char* res = malloc(len_src + len_str + 1);
+
+    s21_memcpy(res, src, start_index);
+    res[start_index] = '\0';
+    s21_strncat(res, str, len_str + 1);
+    s21_strncat(res, src + start_index, len_src - start_index + 1);
+
+
+    return res;
+}
