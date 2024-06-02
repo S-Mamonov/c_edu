@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define s21_NULL (void*)0
@@ -22,6 +23,7 @@ char* s21_strstr(const char* haystack, const char* needle);
 char* s21_strtok(char* str, const char* delim);
 
 void* s21_insert(const char* src, const char* str, s21_size_t start_index);
+void* s21_trim(const char* src, const char* trim_chars);
 
 int main()
 {
@@ -29,30 +31,25 @@ int main()
         puts("it's a linux, baby!");
     #endif // __linux__
 
-    char str[100] = {0};
-    char* s1 = "0123";
-    char s2[] = "ad";
-    char s3[] = "third";
-    char* res = s21_insert(s1, s2, 2);
-    printf("---%s---", res);
-//    char str[] = "abc1xyz";
-//    char str2[] = "abc1xyz";
-//    char* sep = "1y";
-//
+    char* str = NULL;
+    //char str2[] = "abc1xyz";
+    char* sep = "890";
+
 //    printf ("+++%s+++\n", strtok(str, sep));
 //    printf ("---%s---\n", s21_strtok(str2, sep));
 //    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//    printf ("---%s---\n", s21_strtok(NULL, sep));
 //    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//    printf ("---%s---\n", s21_strtok(NULL, sep));
 //    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(s21_NULL, sep));
+//    printf ("---%s---\n", s21_strtok(NULL, sep));
 //
 //    puts(str);
 //    puts(str2);
-
-//    for(int i = 0; i < 150; i ++)
-//        printf("%3d - %s\n", i, strerror(i));
+    char* res = s21_insert(str, sep, 0);
+//    for(int i = 0; i < 25; i++)
+//        printf("**%d %c %d\n", i, res[i], res[i]);
+    printf("-=%s=-", res);
 
     return 0;
 }
@@ -211,70 +208,45 @@ char* s21_strstr(const char* haystack, const char* needle){
 }
 
 char* s21_strtok(char* str, const char* delim){
-    static char* last;
+    static char* final;
+    int not_null = 1;
 
-    if (str)
-        last = str;
+    if (str == s21_NULL)
+        str = final;
 
-    if ((last == 0) || (*last == 0))
-        return 0;
+    while (*str && s21_strchr(delim, *str)) str++;
 
-    char* c = last;
-
-    while(strchr(delim, *c)) c++;
-
-    if (*c == 0) return 0;
-
-    char* start = c;
-
-    while(*c && (strchr(delim, *c) == 0)) c++;
-
-    if (*c == 0)
-    {
-        last = c;
-        return start;
+    if (*str == '\0'){
+        final = str;
+        not_null = 0;
     }
 
-    *c = 0;
-    last = c+1;
+    if (not_null){
+        final = str + s21_strcspn(str, delim);
 
-    return start;
+        if (*final != 0){
+            *final = '\0';
+            final++;
+        }
+    }
+    return not_null ? str : s21_NULL;
 }
-
-//char* s21_strtok(char* str, const char* delim){
-//    static char* final;
-//    char ch;
-//
-//    if (str == s21_NULL)
-//        str = final;
-//
-//    do{
-//        if ((ch = *str++) == '\0')
-//            return s21_NULL;
-//    }while(s21_strchr(delim, ch));
-//    str--;
-//
-//    final = str + s21_strcspn(str, delim);
-//
-//    if (*final != 0)
-//        *final++ = '\0';
-//
-//    return str;
-//}
 
 void* s21_insert(const char* src, const char* str, s21_size_t start_index){
-    if (src == s21_NULL || str == s21_NULL) return s21_NULL;
-    s21_size_t len_src = s21_strlen(src);
-    s21_size_t len_str = s21_strlen(str);
-    start_index = start_index < len_src ? start_index : len_src;
+    char* res = s21_NULL;
+    s21_size_t len_src = (src == s21_NULL) ? 0 : s21_strlen(src);
+    s21_size_t len_str = (str == s21_NULL) ? 0 : s21_strlen(str);
 
-    char* res = malloc(len_src + len_str + 1);
-
-    s21_memcpy(res, src, start_index);
-    res[start_index] = '\0';
-    s21_strncat(res, str, len_str + 1);
-    s21_strncat(res, src + start_index, len_src - start_index + 1);
-
-
+    if (start_index <= len_src)
+        res = calloc(len_src + len_str + 1, sizeof(char));
+    if (res){
+        s21_memcpy(res, src, start_index);
+        s21_strncat(res, str, len_str);
+        s21_strncat(res, src + start_index, len_src - start_index);
+    }
     return res;
 }
+
+//void* s21_trim(const char* src, const char* trim_chars){
+//
+//}
