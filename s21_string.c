@@ -31,25 +31,10 @@ int main()
         puts("it's a linux, baby!");
     #endif // __linux__
 
-    char* str = NULL;
-    //char str2[] = "abc1xyz";
-    char* sep = "890";
+    char* str = "abccbza";
+    char str2[] = "ab";
 
-//    printf ("+++%s+++\n", strtok(str, sep));
-//    printf ("---%s---\n", s21_strtok(str2, sep));
-//    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(NULL, sep));
-//    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(NULL, sep));
-//    printf ("+++%s+++\n", strtok(NULL, sep));
-//    printf ("---%s---\n", s21_strtok(NULL, sep));
-//
-//    puts(str);
-//    puts(str2);
-    char* res = s21_insert(str, sep, 0);
-//    for(int i = 0; i < 25; i++)
-//        printf("**%d %c %d\n", i, res[i], res[i]);
-    printf("-=%s=-", res);
+    printf("--%s--\n", (char*)s21_trim(str, str2));
 
     return 0;
 }
@@ -229,6 +214,7 @@ char* s21_strtok(char* str, const char* delim){
             final++;
         }
     }
+
     return not_null ? str : s21_NULL;
 }
 
@@ -247,6 +233,29 @@ void* s21_insert(const char* src, const char* str, s21_size_t start_index){
     return res;
 }
 
-//void* s21_trim(const char* src, const char* trim_chars){
-//
-//}
+void* s21_trim(const char* src, const char* trim_chars){
+    char *res = s21_NULL;
+
+    if (src){
+        if (trim_chars && *trim_chars) {
+            int indx_start = 0;
+            int indx_end = s21_strlen(src) - 1;
+
+            while (src[indx_start] && s21_strchr(trim_chars, src[indx_start])) indx_start++;
+
+            if (src[indx_start]){
+                while (s21_strchr(trim_chars, src[indx_end])) indx_end--;
+
+                res = calloc(indx_end - indx_start + 2, sizeof(char));
+
+                for (int i = 0; indx_start <= indx_end; i++, indx_start++)
+                    res[i] = src[indx_start];
+            }
+            else
+                res = calloc(1, sizeof(char));
+        }
+        else
+            res = s21_trim(src, "\t\n ");
+    }
+    return res;
+}
