@@ -1,21 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "s21_string.h"
-
-int main()
-{
-    #ifdef __linux__
-        puts("it's a linux, baby!");
-    #endif // __linux__
-
-    char* str = "abccbza";
-    char str2[] = "ab";
-
-    printf("--%s--\n", (char*)s21_trim(str, str2));
-    printf("--%s--\n", (char*)s21_to_upper(str2));
-
-    return 0;
-}
 
 void* s21_memchr(const void* str, int c, s21_size_t n){
     void* res = s21_NULL;
