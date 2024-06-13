@@ -1,8 +1,9 @@
+#include <stdlib.h>
 #include "s21_string.h"
 
 void* s21_memchr(const void* str, int c, s21_size_t n){
     void* res = s21_NULL;
-    const char* ptr = str;
+    const unsigned char* ptr = str;
 
     for (s21_size_t i = 0; i < n; i++){
         if(ptr[i] == c){
@@ -14,8 +15,8 @@ void* s21_memchr(const void* str, int c, s21_size_t n){
 }
 
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n){
-    const char* ptr1 = str1;
-    const char* ptr2 = str2;
+    const unsigned char* ptr1 = str1;
+    const unsigned char* ptr2 = str2;
     int res = 0;
 
     for (s21_size_t i = 0; i < n; i++){
@@ -28,8 +29,8 @@ int s21_memcmp(const void *str1, const void *str2, s21_size_t n){
 }
 
 void* s21_memcpy(void* dest, const void* src, s21_size_t n){
-    char* ptr_dst = dest;
-    const char* ptr_src = src;
+    unsigned char* ptr_dst = dest;
+    const unsigned char* ptr_src = src;
 
     for(s21_size_t i = 0; i < n; i++){
         ptr_dst[i] = ptr_src[i];
@@ -74,16 +75,20 @@ char* s21_strchr(const char* str, int c){
     return res;
 }
 
-s21_size_t s21_strlen(const char* str){
-    s21_size_t cnt;
-
-    for (cnt = 0; str[cnt]; cnt++);
-
-    return cnt;
-}
+//s21_size_t s21_strlen(const char* str){
+//    s21_size_t cnt;
+//
+//    for (cnt = 0; str[cnt]; cnt++);
+//
+//    return cnt;
+//}
 
 int s21_strncmp(const char* str1, const char* str2, s21_size_t n){
-    n = (s21_strlen(str1) < s21_strlen(str2) ? s21_strlen(str1) : s21_strlen(str1)) + 1;
+    size_t min_len = s21_strlen(str1) < s21_strlen(str2) ? s21_strlen(str1) : s21_strlen(str2);
+
+    if (n > min_len)
+        n = min_len + 1;
+
     return s21_memcmp(str1, str2, n);
 }
 
