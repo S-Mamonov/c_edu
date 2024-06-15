@@ -14,7 +14,7 @@ s21_string.a : $(OBJS) s21_string.h
 	ar rsc s21_string.a $(OBJS)
 
 test : s21_string.a tests.c
-	$(CC) $(FLAGS) tests.c s21_string.a -o test.out -lcheck -lm -lsubunit
+	$(CC) $(FLAGS) tests.c s21_string.a -o test.out `pkg-config --cflags --libs check`
 	./test.out
 
 gcov_report : tests.c
