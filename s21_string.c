@@ -218,11 +218,14 @@ void* s21_to_lower(const char* str){
 
 void* s21_insert(const char* src, const char* str, s21_size_t start_index){
     char* res = s21_NULL;
-    s21_size_t len_src = (src == s21_NULL) ? 0 : s21_strlen(src);
-    s21_size_t len_str = (str == s21_NULL) ? 0 : s21_strlen(str);
+    s21_size_t len_src;
+    s21_size_t len_str;
 
-    if (start_index <= len_src)
+    if (src && str && start_index <= s21_strlen(src)){
+        len_src = s21_strlen(src);
+        len_str = s21_strlen(str);
         res = calloc(len_src + len_str + 1, sizeof(char));
+    }
     if (res){
         s21_memcpy(res, src, start_index);
         s21_strncat(res, str, len_str);
